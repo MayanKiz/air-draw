@@ -1,59 +1,57 @@
-# Air Draw
+# Air Draw — Gesture-Based Doodler
 
 ## Description
 
-This repository contains a maintainable implementation with a focused user interface and a clear development workflow.
+A browser drawing experience that lets users draw in the air using hand gestures detected through MediaPipe computer vision.
+
+## Quick Start
+
+Run `npm install`, then `npm run dev`. Camera permission is required for hand tracking.
 
 ## Tech Stack
 
-Vite, HTML / CSS / JavaScript
+Vite
 
 ## Key Features
 
-- Core application workflow.
-- Responsive user interface.
-- Reusable project components.
+- Hand landmark tracking.
+- gesture-driven drawing.
+- color selection.
+- canvas rendering.
+- responsive controls.
+- accessible Instagram watermark link.
 
-## How to Run
+## Project Structure
+
+The primary entry point is `index.html`. Supporting components, services, styles, and configuration files remain organized next to the relevant application layer.
+
+## Setup and Installation
 
 ### Prerequisites
 
-Install the runtime and package manager required by the technology stack above. If the project uses environment variables, create a local `.env` file from the available example configuration and keep secrets out of version control.
+Install the runtime required by the project. JavaScript projects require Node.js and npm. Python projects require Python 3. External integrations such as Supabase, Firebase, AI providers, Telegram, or browser camera access must be configured through environment variables or explicit local permissions.
 
-### Installation
+### Run Locally
 
-```bash
-# Clone the repository
-git clone <repository-url>
-cd air-draw
-
-# Install dependencies when package.json is present
+```text
 npm install
-```
 
-For Python projects, install dependencies with `pip install -r requirements.txt` when that file is present. For C or C++ projects, use the compiler and build instructions appropriate to the source files.
-
-### Start the application
-
-```bash
 npm run dev
 ```
 
-Use the project-specific entry point when the repository does not define an `npm run dev` script. Common alternatives include `npm start`, `python <entry-file>.py`, or opening the static `index.html` file in a browser.
+## Deployment
 
-## Project Status
+For a static project, publish the project directory through a static hosting provider. For a Next.js or Vite project, connect the repository to the hosting provider and use the package script defined in `package.json`. Configure all required secrets in the hosting provider dashboard; do not commit credentials to source control.
 
-This repository is maintained as a professional development project.
+## Notes
 
-## Contact and Collaboration
+This repository is intended for learning, prototyping, and controlled demonstration. Review permissions, user consent, and third-party service terms before enabling camera, messaging, database, or automation features in a public deployment.
 
-For questions, collaboration, technical discussion, or project-related inquiries, use any of the following professional contact channels:
+## Contact
 
-- **Instagram:** [@rao.mynkk](https://www.instagram.com/rao.mynkk/)
-- **Email:** [rao.mynkk@gmail.com](mailto:rao.mynkk@gmail.com)
-- **WhatsApp:** [+24106603434](https://wa.me/24106603434)
-- **LinkedIn:** [Mayank Yadav](https://www.linkedin.com/in/mayank-yadav-2803202a5?utm_source=share_via&utm_content=profile&utm_medium=member_android)
+For questions, collaboration, or technical discussion, use the following professional channels:
 
-Questions and collaboration requests are welcome. Please use the channel that best matches the nature of your inquiry.
-
-> **Project watermark:** Mayank Yadav · @rao.mynkk
+- Instagram: [@rao.mynkk](https://www.instagram.com/rao.mynkk/).
+- Email: [rao.mynkk@gmail.com](mailto:rao.mynkk@gmail.com).
+- WhatsApp: [+24 106 603 434](https://wa.me/24106603434).
+- LinkedIn: [Mayank Yadav](https://www.linkedin.com/in/mayank-yadav-2803202a5/).
