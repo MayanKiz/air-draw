@@ -982,6 +982,16 @@ $('btn-save').addEventListener('click', () => {
 
 // Onboarding start
 btnStart.addEventListener('click', () => {
+  // Browsers allow fullscreen only from a direct user gesture. The Continue
+  // button is the ideal moment to enter the focused drawing workspace.
+  const fullscreenTarget = appEl || document.documentElement;
+  const requestFullscreen = fullscreenTarget.requestFullscreen || fullscreenTarget.webkitRequestFullscreen;
+  if (!document.fullscreenElement && requestFullscreen) {
+    requestFullscreen.call(fullscreenTarget).catch(() => {
+      // Fullscreen can be unavailable or blocked; drawing remains usable.
+    });
+  }
+
   onboardingModal.classList.add('hidden');
   state.isModalOpen = false;
   playTone(800, 0.1, 'sine', 0.04);
