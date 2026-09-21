@@ -586,23 +586,25 @@ input[type="range"]::-moz-range-thumb {
    ============================================================ */
 .instagram-watermark {
   position: fixed;
-  right: 22px;
-  bottom: 22px;
+  right: 14px;
+  bottom: 9px;
   z-index: 120;
-  display: grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  padding: 0;
-  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 24px;
+  padding: 3px 6px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.05px;
   text-decoration: none;
-  background: linear-gradient(135deg, rgba(255, 104, 170, 0.48), rgba(255, 32, 126, 0.38) 48%, rgba(178, 72, 190, 0.44));
-  border: 1px solid rgba(255, 190, 225, 0.58);
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius-full);
-  box-shadow: 0 8px 24px rgba(255, 28, 137, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.72), inset 0 -4px 10px rgba(103, 20, 93, 0.16);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
   contain: layout paint;
   transform: translateZ(0);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
   transition: transform 180ms ease-out, box-shadow 180ms ease-out;
 }
 
@@ -611,19 +613,20 @@ input[type="range"]::-moz-range-thumb {
   position: absolute;
   inset: 1px 1px 52% 1px;
   border-radius: inherit;
-  background: linear-gradient(rgba(255, 255, 255, 0.42), transparent);
+  background: linear-gradient(rgba(255, 255, 255, 0.12), transparent);
   pointer-events: none;
 }
 
 .instagram-watermark svg {
-  width: 21px;
-  height: 21px;
+  width: 13px;
+  height: 13px;
   flex: 0 0 auto;
 }
 
 .instagram-watermark:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(255, 28, 137, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.86), inset 0 -4px 10px rgba(103, 20, 93, 0.2);
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.22);
 }
 
 .instagram-watermark:active {
@@ -672,10 +675,11 @@ input[type="range"]:active::-webkit-slider-thumb {
   }
 
   .instagram-watermark {
-    right: 12px;
-    bottom: 12px;
-    width: 42px;
-    height: 42px;
+    right: 9px;
+    bottom: 6px;
+    min-height: 22px;
+    padding: 2px 5px;
+    font-size: 8px;
   }
 }
 
