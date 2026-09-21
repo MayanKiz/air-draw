@@ -49,7 +49,8 @@ const state = {
   lastDetectionAt: 0,
   lastRenderAt: 0,
   latestLandmarks: null,
-  lowPower: (navigator.hardwareConcurrency || 4) <= 6,
+  lowPower: (navigator.hardwareConcurrency || 4) <= 6 || (navigator.deviceMemory || 8) <= 8,
+  zoom: 1,
 };
 
 // ── DOM Elements ───────────────────────────────────────────────
@@ -70,6 +71,7 @@ const thicknessSlider = $('thickness-slider');
 const thicknessValue = $('thickness-value');
 const glowSlider = $('glow-slider');
 const glowValue = $('glow-value');
+const zoomValue = $('zoom-value');
 
 const cameraModeText = $('camera-mode-text');
 const cameraModeIndicator = $('camera-mode-indicator');
@@ -121,6 +123,20 @@ function resizeCanvases() {
     c.width = w;
     c.height = h;
   });
+}
+
+function applyZoom() {
+  const zoom = `scale(${state.zoom})`;
+  [cameraCanvas, drawingCanvas, uiCanvas].forEach((canvas) => {
+    canvas.style.transform = zoom;
+    canvas.style.transformOrigin = 'center center';
+  });
+  if (zoomValue) zoomValue.textContent = `${Math.round(state.zoom * 100)}%`;
+}
+
+function setZoom(nextZoom) {
+  state.zoom = Math.max(0.8, Math.min(1.35, Math.round(nextZoom * 20) / 20));
+  applyZoom();
 }
 
 window.addEventListener('resize', () => {
@@ -569,6 +585,22 @@ function drawGlowStroke(ctx, stroke, isCurrentStroke = false) {
   const width = stroke.thickness;
   const glowMult = stroke.glow / 100;
 
+  // Integrated-GPU path: one inexpensive line pass instead of multiple
+  // shadow-blurred quadratic passes on every redraw.
+  if (state.lowPower) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+    ctx.strokeStyle = lightenColor(color, 0.42);
+    ctx.lineWidth = width;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+    ctx.restore();
+    return;
+  }
+
   ctx.save();
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
@@ -659,14 +691,14 @@ function redrawStrokes() {
 
 // ── Particles ──────────────────────────────────────────────────
 function emitParticles(x, y, color) {
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < (state.lowPower ? 1 : 2); i++) {
     state.particles.push({
       x, y,
       vx: (Math.random() - 0.5) * 3,
       vy: (Math.random() - 0.5) * 3,
       life: 1,
-      decay: 0.02 + Math.random() * 0.03,
-      size: 2 + Math.random() * 3,
+      decay: state.lowPower ? 0.045 : 0.02 + Math.random() * 0.03,
+      size: state.lowPower ? 1.6 + Math.random() * 1.4 : 2 + Math.random() * 3,
       color,
     });
   }
@@ -685,15 +717,19 @@ function updateAndDrawParticles(ctx) {
       continue;
     }
 
-    ctx.save();
     ctx.globalAlpha = p.life * 0.7;
     ctx.fillStyle = p.color;
-    ctx.shadowColor = p.color;
-    ctx.shadowBlur = 10;
     ctx.beginPath();
-    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    if (state.lowPower) {
+      ctx.moveTo(p.x, p.y - p.size * 1.7);
+      ctx.lineTo(p.x + p.size, p.y);
+      ctx.lineTo(p.x, p.y + p.size * 1.7);
+      ctx.lineTo(p.x - p.size, p.y);
+      ctx.closePath();
+    } else {
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    }
     ctx.fill();
-    ctx.restore();
   }
 }
 
@@ -895,6 +931,16 @@ document.querySelectorAll('.color-swatch').forEach(btn => {
     state.activeColor = btn.dataset.color;
     playTone(1000, 0.05, 'sine', 0.03);
   });
+});
+
+// Canvas zoom controls: transform all three aligned canvases together.
+$('btn-zoom-out').addEventListener('click', () => setZoom(state.zoom - 0.05));
+$('btn-zoom-in').addEventListener('click', () => setZoom(state.zoom + 0.05));
+$('btn-zoom-reset').addEventListener('click', () => setZoom(1));
+window.addEventListener('keydown', (event) => {
+  if (event.key === '+' || event.key === '=') setZoom(state.zoom + 0.05);
+  if (event.key === '-') setZoom(state.zoom - 0.05);
+  if (event.key === '0') setZoom(1);
 });
 
 // Thickness
